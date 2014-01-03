@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Geschenkt</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+    <script type="text/coffeescript">
+      class Player extends Backbone.Model
+        defaults:
+          tip  : 11
+          cards: []
+        pass: ->
+          @set('tip', @get('tip') - 1)
+        take: (card, tip) ->
+          @set('tip', @get('tip') + tip)
+          @set('cards', @get('cards').push(card))
+      jQuery ($) ->
+        player = new Player({cards:[3,4,5,7,8,9,10,12,13,14]})
+        tmpl = _.template($('#my_tmpl').html())
+        $('#my_view').html(tmpl(player.toJSON()))
+    </script>
+  </head>
+  <body>
+  <div class="container">
+    <div class="row well">
+    </div>
+    <div id="my_view">
+    </div>
+    <script id="my_tmpl" type="text/template">
+      <div class="row">
+        <div class="col-md-4">
+          <button type="button" class="btn btn-primary btn-block">Pass</button>
+        </div>
+        <div class="col-md-4">
+          <button type="button" class="btn btn-warning btn-block">Take</button>
+        </div>
+        <div class="col-md-4">
+          Coin x <%- tip %>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div id="my_view" class="col-md-12">
+        </div>
+      </div>
+      <div class="btn-toolbar" role="toolbar" style="margin: 0;">
+        <div class="btn-group btn-group-sm">
+          <% for(var i=0; i<cards.length; i++) { %>
+          <button type="button" class="btn btn-default"><%- cards[i] %></button>
+          <% } %>
+        </div>
+      </div>
+    </script>
+  </body>
+</html>
+
