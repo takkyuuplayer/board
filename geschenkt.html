@@ -35,6 +35,7 @@
     <div id="my_view">
     </div>
     <script id="my_tmpl" type="text/template">
+      <% var grouped = _.groupBy(cards, function(card) { for(var i=card; i>2; i--) if (!_.contains(cards, i-1)) return i }); %>
       <div class="row">
         <div class="col-md-4">
           <button type="button" class="btn btn-primary btn-block">Pass</button>
@@ -43,7 +44,10 @@
           <button type="button" class="btn btn-warning btn-block">Take</button>
         </div>
         <div class="col-md-4">
-          Coin x <%- tip %>
+          <ul>
+            <li>Coin : <%- tip %></li>
+            <li>Point : <%- _.reduce(grouped, function(tmp, group) { return tmp - _.first(group); }, 0) %></li>
+          </ul>
         </div>
       </div>
       <hr/>
@@ -52,11 +56,13 @@
         </div>
       </div>
       <div class="btn-toolbar" role="toolbar" style="margin: 0;">
-        <div class="btn-group btn-group-sm">
-          <% for(var i=0; i<cards.length; i++) { %>
-          <button type="button" class="btn btn-default"><%- cards[i] %></button>
-          <% } %>
-        </div>
+          <% _.each(grouped, function(group) { %>
+            <div class="btn-group btn-group-sm">
+              <% _.each(group, function(card) { %>
+                <button type="button" class="btn <% if(_.first(group) == card) { %>btn-danger<% } else { %>btn-default<% } %>"><%- card %></button>
+              <% }); %>
+            </div>
+          <% }); %>
       </div>
     </script>
   </body>
